@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Button, SearchBar, Spinner } from '@shared/components';
-import { useDebounce } from '@shared/hooks/useDebounce';
 import React, { useMemo, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,7 +17,6 @@ export const Countries = () => {
   const navigation = useNavigation<NavigationProp>();
   const { countries, error, loading } = useCountries();
   const [searchQuery, setSearchQuery] = useState('');
-  const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [filters, setFilters] = useState<CountryFilters>({});
   const [isFilterSheetVisible, setIsFilterSheetVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,9 +24,9 @@ export const Countries = () => {
   const filteredCountries = useMemo(() => {
     let result = countries;
 
-    if (debouncedSearchQuery.trim()) {
+    if (searchQuery.trim()) {
       result = result.filter(country =>
-        country.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+        country.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -45,7 +43,7 @@ export const Countries = () => {
     }
 
     return result;
-  }, [countries, debouncedSearchQuery, filters]);
+  }, [countries, searchQuery, filters]);
 
   const paginatedCountries = useMemo(() => {
     return filteredCountries.slice(0, currentPage * ITEMS_PER_PAGE);

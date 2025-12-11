@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 type SearchBarProps = {
@@ -16,20 +16,38 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onClear,
   className = '',
 }) => {
+  const [internalValue, setInternalValue] = useState(value);
+
+  const handleSubmit = () => {
+    onChangeText(internalValue);
+  };
+
+  const handleClear = () => {
+    setInternalValue('');
+    if (onClear) {
+      onClear();
+    } else {
+      onChangeText('');
+    }
+  };
+
   return (
     <View
       className={`flex-row items-center bg-white rounded-lg px-4 py-2 border border-gray-200 ${className}`}
     >
       <Text className="text-gray-400 mr-2">🔍</Text>
       <TextInput
-        value={value}
-        onChangeText={onChangeText}
+        value={internalValue}
+        onChangeText={setInternalValue}
+        onSubmitEditing={handleSubmit}
+        onBlur={handleSubmit}
         placeholder={placeholder}
         placeholderTextColor="#9ca3af"
         className="flex-1 text-base text-gray-900"
+        returnKeyType="search"
       />
-      {value.length > 0 && (
-        <TouchableOpacity onPress={onClear || (() => onChangeText(''))}>
+      {internalValue.length > 0 && (
+        <TouchableOpacity onPress={handleClear}>
           <Text className="text-gray-400 text-lg ml-2">✕</Text>
         </TouchableOpacity>
       )}
