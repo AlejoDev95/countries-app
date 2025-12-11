@@ -1,97 +1,486 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# CountriesApp
 
-# Getting Started
+Aplicación React Native que muestra información de países del mundo utilizando GraphQL, implementada con Clean Architecture.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Tabla de Contenidos
 
-## Step 1: Start Metro
+- [Requisitos del Sistema](#requisitos-del-sistema)
+- [Tecnologías Utilizadas](#tecnologías-utilizadas)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Ejecución del Proyecto](#ejecución-del-proyecto)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Solución de Problemas](#solución-de-problemas)
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Requisitos del Sistema
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### Versiones Requeridas
 
-```sh
-# Using npm
+- **Node.js**: >= 20.x
+- **npm**: >= 10.x (incluido con Node.js)
+- **React Native**: 0.82.1
+- **React**: 19.1.1
+
+### Para Desarrollo en iOS
+
+- **macOS**: Monterey o superior
+- **Xcode**: 26.1.1 o superior
+- **iOS Deployment Target**: 15.1+
+- **CocoaPods**: Última versión estable
+- **Ruby**: 2.7+ (para CocoaPods)
+
+### Para Desarrollo en Android
+
+- **JDK**: OpenJDK 17 (recomendado Zulu 17.0.16 LTS)
+- **Android Studio**: Flamingo o superior
+- **Android SDK**:
+  - Build Tools: 36.0.0
+  - Compile SDK: 36
+  - Target SDK: 36
+  - Min SDK: 24
+  - NDK Version: 27.1.12297006
+- **Kotlin**: 2.1.20
+
+### Herramientas Adicionales
+
+- **Watchman**: Recomendado para mejor rendimiento en desarrollo (opcional)
+- **Git**: Para clonar el repositorio
+
+## Tecnologías Utilizadas
+
+### Core
+
+- **React Native**: 0.82.1
+- **TypeScript**: 5.8.3
+- **React Navigation**: 7.1.25
+
+### Estado y Datos
+
+- **Apollo Client**: 4.0.10 (GraphQL Client)
+- **GraphQL**: 16.12.0
+
+### UI/Styling
+
+- **NativeWind**: 4.2.1 (Tailwind CSS para React Native)
+- **TailwindCSS**: 3.4.19
+
+### Video
+
+- **react-native-video**: 6.18.0
+- **react-native-worklets**: 0.7.1
+
+### Herramientas de Desarrollo
+
+- **ESLint**: 8.19.0
+- **Prettier**: 3.7.4
+- **Jest**: 29.6.3
+
+## Instalación
+
+### 1. Verificar Requisitos del Sistema
+
+#### Instalar Node.js
+
+```bash
+# Usando nvm (recomendado)
+nvm install 20
+nvm use 20
+
+# Verificar versión
+node --version  # Debe ser >= 20.x
+npm --version
+```
+
+#### Instalar Watchman (macOS)
+
+```bash
+brew install watchman
+```
+
+### 2. Configuración para iOS
+
+#### Instalar Xcode
+
+1. Descarga Xcode desde la App Store (versión 26.1.1 o superior)
+2. Instala las Command Line Tools:
+
+```bash
+xcode-select --install
+```
+
+#### Instalar CocoaPods
+
+```bash
+# Instalar Ruby (si no está instalado)
+brew install ruby
+
+# Instalar CocoaPods
+sudo gem install cocoapods
+
+# Verificar instalación
+pod --version
+```
+
+### 3. Configuración para Android
+
+#### Instalar Java (OpenJDK 17)
+
+```bash
+# Usando Homebrew (macOS)
+brew install --cask zulu@17
+
+# Configurar JAVA_HOME en ~/.zshrc o ~/.bash_profile
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+
+# Verificar instalación
+java --version  # Debe mostrar OpenJDK 17.x
+```
+
+#### Configurar Android Studio
+
+1. Descarga e instala [Android Studio](https://developer.android.com/studio)
+2. Durante la instalación, asegúrate de instalar:
+   - Android SDK
+   - Android SDK Platform
+   - Android Virtual Device
+   - Performance (Intel HAXM) - solo para Intel Macs
+
+3. Configura las variables de entorno en `~/.zshrc` o `~/.bash_profile`:
+
+   ```bash
+   export ANDROID_HOME=$HOME/Library/Android/sdk
+   export PATH=$PATH:$ANDROID_HOME/emulator
+   export PATH=$PATH:$ANDROID_HOME/platform-tools
+   export PATH=$PATH:$ANDROID_HOME/tools
+   export PATH=$PATH:$ANDROID_HOME/tools/bin
+   ```
+
+4. Instala los SDK necesarios usando Android Studio SDK Manager:
+   - Android SDK Platform 36
+   - Android SDK Build-Tools 36.0.0
+   - NDK (Side by side) versión 27.1.12297006
+
+### 4. Clonar el Repositorio
+
+```bash
+git clone <url-del-repositorio>
+cd CountriesApp
+```
+
+### 5. Instalar Dependencias del Proyecto
+
+```bash
+# Instalar dependencias de Node
+npm install
+
+# Para iOS: Instalar dependencias de CocoaPods
+cd ios
+pod install
+cd ..
+```
+
+## Configuración
+
+### Variables de Entorno
+
+El proyecto utiliza `react-native-dotenv` para gestionar variables de entorno desde un archivo `.env`.
+
+#### Archivo .env
+
+El proyecto incluye un archivo [.env](.env) con las siguientes variables:
+
+```bash
+GRAPHQL_ENDPOINT=https://countries.trevorblades.com/graphql
+APP_NAME=CountriesApp
+APP_VERSION=0.0.1
+```
+
+#### Variables Disponibles
+
+- **GRAPHQL_ENDPOINT**: URL del endpoint GraphQL para consultar información de países
+  - Valor actual: `https://countries.trevorblades.com/graphql`
+  - Descripción: API pública gratuita que proporciona datos de países del mundo
+
+- **APP_NAME**: Nombre de la aplicación
+  - Valor: `CountriesApp`
+
+- **APP_VERSION**: Versión de la aplicación
+  - Valor: `0.0.1`
+
+- **IS_DEV**: Indica si la app está en modo desarrollo
+  - Valor: `__DEV__` (automático - true en desarrollo, false en producción)
+
+#### Cómo Modificar las Variables
+
+1. Edita el archivo [.env](.env) en la raíz del proyecto:
+
+   ```bash
+   GRAPHQL_ENDPOINT=https://tu-endpoint-personalizado.com/graphql
+   APP_NAME=MiApp
+   APP_VERSION=1.0.0
+   ```
+
+2. Reinicia Metro Bundler con cache limpio:
+
+   ```bash
+   npm start -- --reset-cache
+   ```
+
+3. Ejecuta la app nuevamente
+
+#### Archivo env.ts
+
+El archivo [src/core/config/env.ts](src/core/config/env.ts) actúa como una capa de abstracción que:
+
+- Importa las variables desde `@env` (archivo `.env`)
+- Proporciona valores por defecto si las variables no están definidas
+- Centraliza el acceso a la configuración en toda la app
+
+**No es necesario editar `env.ts` directamente** - solo edita el archivo `.env`.
+
+#### Archivo .env.example
+
+Existe un archivo [.env.example](.env.example) como plantilla de referencia. Si clonas el proyecto, copia este archivo a `.env`:
+
+```bash
+cp .env.example .env
+```
+
+### Configuración de NativeWind
+
+El proyecto usa NativeWind para styling. La configuración está en:
+
+- [tailwind.config.js](tailwind.config.js)
+- `babel.config.js`
+
+No requiere configuración adicional para desarrollo.
+
+### Path Aliases
+
+El proyecto tiene configurados los siguientes alias de importación:
+
+- `@/*` → `src/*`
+- `@core/*` → `src/core/*`
+- `@shared/*` → `src/shared/*`
+- `@features/*` → `src/features/*`
+- `@navigation/*` → `src/navigation/*`
+
+Configurados en:
+
+- [tsconfig.json](tsconfig.json) (TypeScript)
+- [babel.config.js](babel.config.js) (Runtime)
+
+## Ejecución del Proyecto
+
+### Iniciar Metro Bundler
+
+Metro es el bundler de JavaScript para React Native. Debe estar corriendo antes de ejecutar la aplicación:
+
+```bash
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+### Ejecutar en iOS
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+En una nueva terminal (manteniendo Metro corriendo):
 
-### Android
+```bash
+# Ejecutar en simulador iOS (por defecto iPhone)
+npm run ios
 
-```sh
-# Using npm
+# Ejecutar en un dispositivo específico
+npx react-native run-ios --device "Nombre del dispositivo"
+
+# Ejecutar en un simulador específico
+npx react-native run-ios --simulator="iPhone 15 Pro"
+```
+
+**Nota**: La primera compilación puede tardar varios minutos.
+
+### Ejecutar en Android
+
+#### Iniciar Emulador Android
+
+1. Abre Android Studio
+2. Ve a `Device Manager`
+3. Crea o inicia un AVD (Android Virtual Device) con API 24 o superior
+
+O desde la terminal:
+
+```bash
+# Listar emuladores disponibles
+emulator -list-avds
+
+# Iniciar un emulador
+emulator -avd <nombre-del-emulador>
+```
+
+#### Ejecutar la aplicación
+
+En una nueva terminal (manteniendo Metro corriendo):
+
+```bash
+# Ejecutar en emulador o dispositivo conectado
 npm run android
-
-# OR using Yarn
-yarn android
 ```
+
+**Nota**: La primera compilación puede tardar varios minutos.
+
+### Desarrollo
+
+Una vez que la aplicación está corriendo:
+
+- **Recargar**:
+  - iOS: Presiona `R` en el simulador
+  - Android: Presiona `R` dos veces o usa `Ctrl+M` (Windows/Linux) / `Cmd+M` (macOS)
+
+- **Abrir Dev Menu**:
+  - iOS: `Cmd+D` en el simulador
+  - Android: Agita el dispositivo o `Cmd+M` (macOS) / `Ctrl+M` (Windows/Linux)
+
+- **Hot Reload**: Habilitado por defecto (Fast Refresh)
+
+## Estructura del Proyecto
+
+```plaintext
+CountriesApp/
+├── src/
+│   ├── core/                       # Configuración y bootstrap de la app
+│   │   ├── config/                 # Variables de entorno
+│   │   ├── bootstrap/              # Inicialización de la app
+│   │   └── infrastructure/         # Clientes HTTP y GraphQL
+│   ├── features/
+│   │   └── countries/              # Feature de países
+│   │       ├── domain/             # Entidades, repositorios, casos de uso
+│   │       ├── infrastructure/     # Implementación de repos y GraphQL
+│   │       └── presentation/       # UI, componentes, hooks
+│   ├── shared/                     # Componentes y utilidades compartidas
+│   └── navigation/                 # Configuración de navegación
+├── android/                        # Código nativo Android
+├── ios/                            # Código nativo iOS
+└── App.tsx                         # Punto de entrada de la aplicación
+```
+
+### Arquitectura
+
+El proyecto sigue **Clean Architecture** con las siguientes capas:
+
+- **Domain**: Lógica de negocio pura (entidades, casos de uso, interfaces)
+- **Infrastructure**: Implementación de servicios externos (GraphQL, HTTP)
+- **Presentation**: UI y lógica de presentación (componentes, hooks, pantallas)
+
+## Solución de Problemas
 
 ### iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+#### Error: "Could not find iPhone simulator"
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+```bash
+# Listar simuladores disponibles
+xcrun simctl list devices
 
-```sh
-bundle install
+# Resetear simuladores
+xcrun simctl erase all
 ```
 
-Then, and every time you update your native dependencies, run:
+#### Error al instalar pods
 
-```sh
-bundle exec pod install
+```bash
+cd ios
+rm -rf Pods Podfile.lock
+pod deintegrate
+pod install
+cd ..
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+#### Error: "Command PhaseScriptExecution failed"
 
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+```bash
+cd ios
+xcodebuild clean
+cd ..
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Android
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+#### Error: "SDK location not found"
 
-## Step 3: Modify your app
+Crea el archivo `android/local.properties`:
 
-Now that you have successfully run the app, let's make changes!
+```properties
+sdk.dir=/Users/<tu-usuario>/Library/Android/sdk
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+#### Error: "Execution failed for task ':app:installDebug'"
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+```bash
+cd android
+./gradlew clean
+cd ..
+```
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+#### Error: "Unable to load script from assets"
 
-## Congratulations! :tada:
+1. Asegúrate de que Metro esté corriendo
+2. Limpia el cache:
 
-You've successfully run and modified your React Native App. :partying_face:
+```bash
+npm start -- --reset-cache
+```
 
-### Now what?
+### Problemas Generales
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+#### Limpiar cache completo
 
-# Troubleshooting
+```bash
+# Limpiar cache de npm
+npm cache clean --force
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+# Limpiar cache de Metro
+npm start -- --reset-cache
 
-# Learn More
+# Limpiar watchman
+watchman watch-del-all
 
-To learn more about React Native, take a look at the following resources:
+# Eliminar y reinstalar dependencias
+rm -rf node_modules
+npm install
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+# Para iOS
+cd ios && rm -rf Pods Podfile.lock && pod install && cd ..
+
+# Para Android
+cd android && ./gradlew clean && cd ..
+```
+
+#### Puerto 8081 ocupado
+
+```bash
+# Encontrar proceso usando el puerto
+lsof -i :8081
+
+# Matar el proceso
+kill -9 <PID>
+```
+
+## Scripts Disponibles
+
+```bash
+npm start          # Inicia Metro Bundler
+npm run android    # Ejecuta la app en Android
+npm run ios        # Ejecuta la app en iOS
+npm run lint       # Ejecuta ESLint
+npm test           # Ejecuta tests con Jest
+```
+
+## Recursos Adicionales
+
+- [Documentación de React Native](https://reactnative.dev)
+- [Documentación de React Navigation](https://reactnavigation.org)
+- [Documentación de Apollo Client](https://www.apollographql.com/docs/react)
+- [Documentación de NativeWind](https://www.nativewind.dev)
+- [Guía de configuración del entorno](https://reactnative.dev/docs/environment-setup)
+
+## Licencia
+
+Privado - Todos los derechos reservados

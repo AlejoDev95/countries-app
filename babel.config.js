@@ -3,6 +3,16 @@ module.exports = {
   plugins: [
     'react-native-worklets/plugin',
     [
+      'module:react-native-dotenv',
+      {
+        moduleName: '@env',
+        path: '.env',
+        safe: false,
+        allowUndefined: true,
+        verbose: false,
+      },
+    ],
+    [
       'module-resolver',
       {
         root: ['./src'],
