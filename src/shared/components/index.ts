@@ -4,3 +4,4 @@ export * from './Loader';
 export * from './SearchBar';
 export * from './Select';
 export * from './Spinner';
+export * from './VideoPlayer';

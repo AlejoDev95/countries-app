@@ -5,7 +5,7 @@ import { CountriesParamsList } from './countriesParamsList';
 
 const Stack = createNativeStackNavigator<CountriesParamsList>();
 
-const AuthNavigator = () => {
+const CountryNavigator = () => {
   return (
     <CountryProvider>
       <Stack.Navigator
@@ -19,4 +19,4 @@ const AuthNavigator = () => {
   );
 };
 
-export default AuthNavigator;
+export default CountryNavigator;

@@ -3,7 +3,7 @@ import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { useCountryByCode } from '../hooks/useCountryByCode';
-import { Spinner } from '@shared/components/';
+import { Spinner, VideoPlayer } from '@shared/components';
 import { CountriesParamsList } from '../navigation/countriesParamsList';
 
 type CountryDetailsRouteProp = RouteProp<CountriesParamsList, 'countryDetails'>;
@@ -93,6 +93,13 @@ export const CountryDetails = () => {
               {country.languages.length > 0 &&
                 ` The official language${country.languages.length > 1 ? 's are' : ' is'} ${country.languages.join(', ')}.`}
             </Text>
+          </View>
+
+          <View className="mt-4">
+            <Text className="text-lg font-bold text-gray-900 mb-3">
+              🎬 Featured Video
+            </Text>
+            <VideoPlayer uri="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
           </View>
         </View>
       </ScrollView>
