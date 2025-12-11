@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Countries, CountryDetails } from '../screens';
-import { CountriesParamsList } from '../types/CountriesParamsList';
+import { CountriesParamsList } from './countriesParamsList';
 
 const Stack = createNativeStackNavigator<CountriesParamsList>();
 
