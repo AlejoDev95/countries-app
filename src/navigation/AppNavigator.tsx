@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Loader } from '@shared/components/Loader';
 import { Suspense } from 'react';
-import { Loader } from '../shared/components/Loader';
 import { CountryNavigator } from './LazyNavigators';
 import { RootStackParamList } from './types/RootStackParamList';
 
