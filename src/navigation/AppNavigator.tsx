@@ -1,7 +1,4 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Loader } from '@shared/components/Loader';
-import { Suspense } from 'react';
-import { CountryNavigator } from './LazyNavigators';
 import { RootStackParamList } from './types/RootStackParamList';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -12,13 +9,10 @@ export const AppNavigator = () => {
       initialRouteName="countries"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="countries">
-        {() => (
-          <Suspense fallback={<Loader />}>
-            <CountryNavigator />
-          </Suspense>
-        )}
-      </Stack.Screen>
+      <Stack.Screen
+        name="countries"
+        getComponent={() => require('@features/countries/presentation/navigation/CountryNavigator').default}
+      />
     </Stack.Navigator>
   );
 };
